@@ -1,0 +1,22 @@
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OCCA generated working outputs
+occa_sizing_output/
+occa_sizing_properties/
+awr_miner_parsed/
+awr_miner_plots/
+awr_miner_occa/
+
+# Customer data should live outside this repository by default.
+emcc_sizing_extracts/
+emcc_sizing_extracts_filtered/
+emcc_sizing_extracts_obfuscated/
+awr_miner_out/
+
+# Local OS/editor files
+.DS_Store
+*.swp
