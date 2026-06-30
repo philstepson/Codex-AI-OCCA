@@ -32,13 +32,25 @@ skills/occa-emcc-postprocess/            Codex skill for EMCC post-processing
 
 ## First Local Setup
 
-Create a virtual environment in each processing workspace or in a shared local tool directory, then install the wheel:
+Create a Python 3.12 or newer virtual environment in each processing workspace or in a shared local tool directory, then install the wheel:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install /Users/PWSTEPHE/codex/AI-OCCA/occa-26.3.0-py3-none-any.whl
 .venv/bin/occa --help
+```
+
+Before processing customer data, compare the installed version from `occa --version` with the latest wheel listed on the Oracle-internal OCCA releases page:
+
+```text
+https://occa.us.oracle.com/ords/r/occa/occa/occa-releases
+```
+
+That page requires Oracle authentication and MFA. If a newer wheel is installed, rerun the local environment check and review the skill scripts against the new OCCA command output and generated artifact names:
+
+```bash
+python skills/occa-emcc-postprocess/scripts/check_occa_environment.py
 ```
 
 Customer extract data should live in separate customer working directories, not directly in this repository unless the user requests that layout.
@@ -56,6 +68,7 @@ The skill also includes helper scripts for repeatable validation:
 
 ```text
 skills/occa-emcc-postprocess/scripts/inspect_emcc_extract.py
+skills/occa-emcc-postprocess/scripts/check_occa_environment.py
 skills/occa-emcc-postprocess/scripts/assign_cluster_cohorts.py
 skills/occa-emcc-postprocess/scripts/find_missing_metric_candidates.py
 skills/occa-emcc-postprocess/scripts/verify_occa_outputs.py

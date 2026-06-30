@@ -18,33 +18,38 @@ Use this skill for Oracle Cloud Capacity Analytics EMCC extract post-processing.
 
 ## Workflow
 
-1. Confirm the working directory contains `emcc_sizing_extracts/*.csv` and `*.txt`.
-2. Inspect extract health:
+1. Confirm the local OCCA environment is suitable:
+   - Run `scripts/check_occa_environment.py`.
+   - Use Python 3.12 or newer for the active environment.
+   - Compare `occa --version` with the latest wheel listed on the OCCA releases page before processing customer data.
+   - The release page requires Oracle authentication/MFA, so do not treat a failed automated web check as proof that the local wheel is current.
+2. Confirm the working directory contains `emcc_sizing_extracts/*.csv` and `*.txt`.
+3. Inspect extract health:
    - Run `scripts/inspect_emcc_extract.py <work_dir>`.
    - Check for `ORA-`, `SP2-`, traceback, and extract errors.
-3. Run pre-flight:
+4. Run pre-flight:
    - `occa --pre-flight`
    - Review `occa_sizing_output/sizing/current_status_by_target_type.csv`.
-4. Generate properties:
+5. Generate properties:
    - `occa --create-properties`
    - Copy `*_original.csv` to editable property names if missing.
-5. Assign cohorts:
+6. Assign cohorts:
    - Ask for customer-provided cohorts first.
    - If unavailable and approved, run `scripts/assign_cluster_cohorts.py <work_dir> --apply`.
-6. Apply Data Guard defaults:
+7. Apply Data Guard defaults:
    - `occa --copy-db-name`
    - Review populated `Use Values from Database Name` and `Use Values Scope`.
-7. Apply properties and run analysis:
+8. Apply properties and run analysis:
    - `occa --add-properties`
    - `occa --run-metric-analysis`
-8. If OCCA reports missing metrics:
+9. If OCCA reports missing metrics:
    - Run `scripts/find_missing_metric_candidates.py <work_dir>`.
    - Read `references/missing-metrics.md`.
    - Apply only approved property edits, then rerun `--add-properties` and `--run-metric-analysis`.
-9. Verify final artifacts:
+10. Verify final artifacts:
    - Run `scripts/verify_occa_outputs.py <work_dir>`.
    - Confirm no unintended `-1` markers, exclusions, or missing key artifacts.
-10. Create import JSON only after the run is clean enough for review:
+11. Create import JSON only after the run is clean enough for review:
    - `occa --emcc-import`
 
 ## References

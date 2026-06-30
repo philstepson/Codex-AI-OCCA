@@ -21,6 +21,24 @@ Generated directories:
 
 Do not modify `emcc_sizing_extracts/`.
 
+## Environment Freshness
+
+Before processing customer data, confirm the active Python and OCCA CLI:
+
+```bash
+python /Users/PWSTEPHE/codex/AI-OCCA/skills/occa-emcc-postprocess/scripts/check_occa_environment.py
+```
+
+The active Python environment should be Python 3.12 or newer. The OCCA desktop wheel changes from time to time, so compare the installed version from `occa --version` with the latest wheel on the OCCA releases page:
+
+```text
+https://occa.us.oracle.com/ords/r/occa/occa/occa-releases
+```
+
+The release page requires Oracle authentication and MFA. The local checker can report the installed version and the release URL, but it cannot prove that the wheel is current without an authenticated user check.
+
+If a newer wheel is installed, rerun this skill's environment check and review the skill scripts against the new OCCA command output and generated artifact names before using automation for customer data.
+
 ## Command Sequence
 
 Use the installed OCCA CLI for sizing logic. Do not reimplement sizing formulas.

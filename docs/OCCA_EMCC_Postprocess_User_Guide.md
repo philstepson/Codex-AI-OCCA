@@ -20,9 +20,39 @@ It does not cover AWR Miner post-processing, although the same audit principles 
 ## Required Inputs
 
 - A customer working directory containing `emcc_sizing_extracts/`.
-- The OCCA Python package installed in a Python 3.9+ environment.
+- The OCCA Python package installed in a Python 3.12+ environment.
 - Customer cohort guidance if available.
 - Customer approval for substitutions, exclusions, and provisional cohorting.
+
+## Prerequisites and Version Freshness
+
+Before processing customer data, activate the Python environment that contains OCCA and confirm it is Python 3.12 or newer:
+
+```bash
+python --version
+```
+
+Then run the local environment check:
+
+```bash
+python /Users/PWSTEPHE/codex/AI-OCCA/skills/occa-emcc-postprocess/scripts/check_occa_environment.py
+```
+
+This reports the active Python executable, Python version, `occa` executable, and `occa --version` output.
+
+The OCCA desktop wheel changes periodically. Before starting a sizing run, compare the installed version from:
+
+```bash
+occa --version
+```
+
+with the latest wheel on the OCCA releases page:
+
+```text
+https://occa.us.oracle.com/ords/r/occa/occa/occa-releases
+```
+
+The release page requires Oracle authentication and MFA, so this guide does not assume the version check can be fully automated. If a newer wheel is available, install it in the active Python environment, rerun the environment check, and review this skill's scripts against the new OCCA CLI output and generated artifact names before processing customer data.
 
 ## Standard Workflow
 
