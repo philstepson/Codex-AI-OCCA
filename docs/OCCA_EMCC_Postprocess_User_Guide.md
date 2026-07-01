@@ -264,6 +264,22 @@ sizing.csv exists
 html_plots > 0
 ```
 
+## Current-State Summary Report
+
+After `occa --run-metric-analysis` has produced the sizing CSVs and plot HTML files, generate a Calvert-style current-state dashboard from the real OCCA output paths:
+
+```bash
+python /Users/PWSTEPHE/codex/AI-OCCA/skills/occa-emcc-postprocess/scripts/generate_occa_summary_report.py <work_dir>
+```
+
+By default, this writes:
+
+```text
+<work_dir>/Sizing.html
+```
+
+The report uses `occa_sizing_output/sizing/cohort_rollups.csv` and `database_rollups.csv` for summary totals, reads `databases.csv`, `instances.csv`, and `servers.csv` for inventory details, then links to the actual CSV and plot files under `occa_sizing_output`. If the required sizing CSVs are missing, the command exits with a clear error instead of generating a partial report.
+
 ## Final Outputs
 
 Primary review files:

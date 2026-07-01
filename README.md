@@ -27,8 +27,9 @@ skills/occa-emcc-postprocess/            Codex skill for EMCC post-processing
 2. Customer returns a zip containing `emcc_sizing_extracts` or `awr_miner_out` data.
 3. Oracle runs the OCCA desktop analytics package in a customer-specific working directory.
 4. Generated property files are reviewed and edited for cohorts, exclusions, missing metrics, and Data Guard directives.
-5. OCCA metric analysis creates sizing CSVs, plots, and upload JSON.
-6. Upload JSON is reviewed in OCCA Web for target selection and sizing report production.
+5. OCCA metric analysis creates sizing CSVs, rollups, plots, and upload JSON.
+6. A local current-state `Sizing.html` dashboard can be generated from those OCCA outputs for review.
+7. Upload JSON is reviewed in OCCA Web for target selection and sizing report production.
 
 ## First Local Setup
 
@@ -72,6 +73,23 @@ skills/occa-emcc-postprocess/scripts/check_occa_environment.py
 skills/occa-emcc-postprocess/scripts/assign_cluster_cohorts.py
 skills/occa-emcc-postprocess/scripts/find_missing_metric_candidates.py
 skills/occa-emcc-postprocess/scripts/verify_occa_outputs.py
+skills/occa-emcc-postprocess/scripts/generate_occa_summary_report.py
 ```
 
 Missing metric substitutions must be backed by evidence, reasonableness checks, and user/customer approval. Raw extract files should not be edited.
+
+## Current-State Summary Dashboard
+
+After `occa --run-metric-analysis` has produced the sizing CSVs and plots, generate a Calvert-style dashboard from the customer working directory:
+
+```bash
+python skills/occa-emcc-postprocess/scripts/generate_occa_summary_report.py <work_dir>
+```
+
+The default output is:
+
+```text
+<work_dir>/Sizing.html
+```
+
+The dashboard uses OCCA rollup outputs such as `cohort_rollups.csv` and `database_rollups.csv` for summary totals, and links to the actual files under `occa_sizing_output/sizing` and `occa_sizing_output/plots`.

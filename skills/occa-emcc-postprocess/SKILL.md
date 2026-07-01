@@ -49,7 +49,10 @@ Use this skill for Oracle Cloud Capacity Analytics EMCC extract post-processing.
 10. Verify final artifacts:
    - Run `scripts/verify_occa_outputs.py <work_dir>`.
    - Confirm no unintended `-1` markers, exclusions, or missing key artifacts.
-11. Create import JSON only after the run is clean enough for review:
+11. Generate a current-state summary report when a dashboard-style review artifact is useful:
+   - Run `scripts/generate_occa_summary_report.py <work_dir>`.
+   - Confirm the generated `Sizing.html` links to the real files under `occa_sizing_output`.
+12. Create import JSON only after the run is clean enough for review:
    - `occa --emcc-import`
 
 ## References

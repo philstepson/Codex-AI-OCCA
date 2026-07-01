@@ -52,6 +52,7 @@ cp occa_sizing_properties/properties_server_original.csv occa_sizing_properties/
 occa --copy-db-name
 occa --add-properties
 occa --run-metric-analysis
+python /Users/PWSTEPHE/codex/AI-OCCA/skills/occa-emcc-postprocess/scripts/generate_occa_summary_report.py .
 ```
 
 After a clean analysis:
@@ -87,6 +88,10 @@ Metric analysis:
 - `occa_sizing_output/sizing/cohort_statistics.csv`
 - `occa_sizing_output/plots/**/*.html`
 
+Summary report:
+
+- `Sizing.html`
+
 Import:
 
 - `occa_sizing_output/occa_upload_data.json`
@@ -100,3 +105,4 @@ Before import, verify:
 - `cohort_rollups.csv` exists and contains real cohorts, not only `excluded` or `unassigned`.
 - Any substitution is documented with source evidence and user/customer approval.
 - Plots were generated and reviewed for obvious discontinuities or unexpected cohort shapes.
+- `Sizing.html` opens from the work directory and links to the real OCCA sizing CSVs and plot HTML files.
