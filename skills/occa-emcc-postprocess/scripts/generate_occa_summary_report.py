@@ -440,7 +440,7 @@ body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background
 .tab-btn.active, .tab-btn:hover {{ background: #C74634; color: white; }}
 .tab-content {{ display: none; padding: 20px 0; }}
 .tab-content.active {{ display: block; }}
-.summary-cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin: 20px 0; }}
+.summary-cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); column-gap: 24px; row-gap: 15px; margin: 20px 0; }}
 .card {{ background: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,.1); text-align: center; position: relative; cursor: help; }}
 .card .value {{ font-size: 2em; font-weight: bold; color: #C74634; }}
 .card .label {{ color: #666; margin-top: 5px; font-size: .85em; }}
