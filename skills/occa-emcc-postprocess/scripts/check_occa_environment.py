@@ -23,7 +23,7 @@ def parse_min_python(value: str) -> tuple[int, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--min-python", type=parse_min_python, default=(3, 12))
+    parser.add_argument("--min-python", type=parse_min_python, default=(3, 9))
     parser.add_argument("--occa", default="occa", help="Path to occa executable")
     parser.add_argument("--release-url", default=RELEASE_URL)
     args = parser.parse_args()

@@ -20,6 +20,11 @@ KEY_FILES = [
     "occa_sizing_output/sizing/cohort_statistics.csv",
 ]
 
+REQUIRED_OVERRIDE_FIELDS = {
+    "properties_database.csv": ("Allocated Database Size (GB)", "Total Database Size (GB)"),
+    "properties_instance.csv": ("vCPU", "SGA (MB)", "PGA (MB)", "IOPS", "Logons"),
+}
+
 
 def read_rows(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8", errors="replace") as handle:
@@ -29,8 +34,22 @@ def read_rows(path: Path) -> list[dict[str, str]]:
 def row_counts(path: Path) -> tuple[int, int, int]:
     rows = read_rows(path)
     negative = sum(1 for row in rows if any(str(value).strip() == "-1" for value in row.values()))
-    excluded = sum(1 for row in rows if (row.get("excluded") or row.get("Excluded") or "").strip())
+    excluded = sum(
+        1 for row in rows
+        if (row.get("excluded") or row.get("Excluded") or "").strip().lower() == "excluded"
+    )
     return len(rows), negative, excluded
+
+
+def included_missing_override_count(path: Path, excluded_databases: set[str]) -> int:
+    rows = read_rows(path)
+    fields = REQUIRED_OVERRIDE_FIELDS[path.name]
+    return sum(
+        1 for row in rows
+        if (row.get("Cohort") or "included").strip().lower() not in ("excluded", "unassigned")
+        and (row.get("Database Name") or "").strip() not in excluded_databases
+        and any(str(row.get(field, "")).strip() == "-1" for field in fields)
+    )
 
 
 def main() -> int:
@@ -47,19 +66,30 @@ def main() -> int:
             continue
         rows, negative, excluded = row_counts(path)
         print(f"{rel}: rows={rows} negative_rows={negative} excluded_rows={excluded}")
-        if negative:
-            failures += 1
+
+    db_properties = args.work_dir / "occa_sizing_properties/properties_database.csv"
+    excluded_databases = set()
+    if db_properties.exists():
+        excluded_databases = {
+            (row.get("Database Name") or "").strip()
+            for row in read_rows(db_properties)
+            if (row.get("Cohort") or "").strip().lower() in ("", "excluded", "unassigned")
+        }
 
     for rel in [
         "occa_sizing_properties/properties_database.csv",
         "occa_sizing_properties/properties_instance.csv",
     ]:
         path = args.work_dir / rel
-        if path.exists():
-            rows, negative, excluded = row_counts(path)
-            print(f"{rel}: rows={rows} negative_rows={negative} excluded_rows={excluded}")
-            if negative:
-                failures += 1
+        if not path.exists():
+            print(f"{rel}: MISSING")
+            failures += 1
+            continue
+        rows, negative, excluded = row_counts(path)
+        unresolved = included_missing_override_count(path, excluded_databases)
+        print(f"{rel}: rows={rows} negative_rows={negative} unresolved_included_rows={unresolved}")
+        if unresolved:
+            failures += 1
 
     plot_count = len(list((args.work_dir / "occa_sizing_output" / "plots").glob("**/*.html")))
     print(f"html_plots={plot_count}")

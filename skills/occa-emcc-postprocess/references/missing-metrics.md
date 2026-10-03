@@ -1,6 +1,6 @@
 # Missing Metrics Policy
 
-OCCA marks missing required values in property files with `-1`. These must be resolved before a clean metric-analysis run.
+In 26.9.1, OCCA determines whether required telemetry was collected after Data Guard and instance/database replacements. It writes `-1` only in still-empty required override cells when telemetry is absent. A collected zero is valid and must not be treated as missing. The analysis command names affected database/instance rows and exits nonzero for unresolved missing values. Resolve those for included targets before import.
 
 ## Resolution Order
 
@@ -8,6 +8,7 @@ Use this order:
 
 1. Verify whether the target should be excluded.
 2. Check availability and EM metric collection health.
+   Inspect `occa_sizing_output/sizing/metric_presence_by_stage.csv` at `3. After Database Replacements` to distinguish absent telemetry from measured zero. Review the row names and metric columns in the analysis error.
 3. Use Data Guard primary/standby copy directives when appropriate.
 4. For RAC instance gaps, copy from a healthy sibling instance only when the sibling is same database, same cluster, similar host class, and the missing instance is down, blacked out, stale, or agent impaired.
 5. Use alternate EMCC metric windows only when the metric exists for the same target and is temporally close enough to be defensible.
@@ -61,9 +62,9 @@ Clear stale `-1` values from required override columns after a higher-level copy
 Before accepting substitutions:
 
 - Re-run `occa --add-properties` and `occa --run-metric-analysis`.
-- Verify no negative markers remain in property files.
+- Verify no `-1` required override markers remain for included property rows. Other generated negative sentinel values are not automatically missing metrics.
 - Verify `databases.csv` and `instances.csv` have no unintended exclusions.
-- Review `metric_presence_by_stage.csv` for the affected rows after stage 2 or stage 3.
+- Review `metric_presence_by_stage.csv` for the affected rows at final stage 3 after replacements.
 - Compare final cohort rollups against expected database and instance counts.
 - Review generated plots for discontinuities or implausible changes.
 
